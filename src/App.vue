@@ -10,7 +10,9 @@
         </button>
         <button
           class="px-3 mt-3 mr-3 rounded-full bg-gray text-white font-medium shadow-md shadow-gray-100"
+          @click="getUserCountry"
         >
+          <!-- Location Icon -->
           <icon icon="crosshairs"></icon>
         </button>
       </header>
@@ -29,6 +31,10 @@
         <div class="pt-5 ml-3 text-xl text-gray">
           <p>
             Today <span class="px-2">.</span> <span>{{ actualDate }}</span>
+          </p>
+          <p class="pt-5 text-center">
+            <icon icon="map-marker-alt" class="mr-1" />
+            {{ userCountry }}
           </p>
         </div>
       </div>
@@ -51,20 +57,35 @@ export default {
     const tempMode = computed(() => store.state.tempMode);
     const actualTemperature = computed(() => store.state.actualTemperature);
     const actualDate = computed(() => store.state.actualDate);
+    const userCountry = computed(() => store.state.userCountry);
 
     //Methods
     const currentTime = () => {
       store.commit("getActualTime");
     };
+    const getWeatherInfo = () => {
+      console.log("weather info");
+      console.log("test");
+    };
+    const getUserCountry = () => {
+      store.dispatch("getUserCountry");
+    };
 
-    //Lifecycles
+    //Created
     currentTime();
+    if (navigator.geolocation) {
+      getWeatherInfo();
+      getUserCountry();
+    }
 
     return {
       actualWeather,
       actualTemperature,
       tempMode,
       actualDate,
+      userCountry,
+      getWeatherInfo,
+      getUserCountry,
     };
   },
 };
