@@ -1,10 +1,11 @@
 <template>
   <div class="flex flex-col lg:flex-row">
     <!-- MAIN WEATHER AND SEARCH -->
-    <div class="bg-dark-blue h-screen lg:w-2/6">
+    <div class="bg-dark-blue lg:w-1/4 relative h-screen">
       <header class="flex justify-between">
         <button
           class="py-2 px-3 mt-3 ml-3 bg-gray text-white font-medium shadow-md shadow-gray-100"
+          @click="showDrawer"
         >
           Search for places
         </button>
@@ -16,11 +17,19 @@
           <icon icon="crosshairs"></icon>
         </button>
       </header>
-      <div class="flex flex-col items-center">
+      <div class="main-section flex flex-col items-center">
+        <div
+          class="background w-full"
+          :style="
+            'background-image: url( ' +
+            require('./assets/img/Cloud-background.png') +
+            ')'
+          "
+        ></div>
         <img
           :src="require(`./assets/img/${actualWeather}.png`)"
           :alt="actualWeather"
-          class="mr-4 w-2/4 max-w-xs pt-10"
+          class="mr-4 w-2/4 max-w-xs pt-10 md:w-2/5"
         />
         <h1 class="text-white text-center">
           <span class="text-10xl">{{ actualTemperature }}</span>
@@ -38,6 +47,8 @@
           </p>
         </div>
       </div>
+      <!-- NAVIGATION DRAWER -->
+      <Drawer :drawer="drawer" />
     </div>
   </div>
 </template>
@@ -45,9 +56,10 @@
 <script>
 import { computed } from "@vue/reactivity";
 import { useStore } from "vuex";
+import Drawer from "./components/Drawer.vue";
 export default {
   name: "App",
-  components: {},
+  components: { Drawer },
   setup() {
     //Store
     const store = useStore();
@@ -58,6 +70,8 @@ export default {
     const actualTemperature = computed(() => store.state.actualTemperature);
     const actualDate = computed(() => store.state.actualDate);
     const userCountry = computed(() => store.state.userCountry);
+    const background = require("./assets/img/Cloud-background.png");
+    const drawer = computed(() => store.state.drawer);
 
     //Methods
     const currentTime = () => {
@@ -69,6 +83,9 @@ export default {
     };
     const getUserCountry = () => {
       store.dispatch("getUserCountry");
+    };
+    const showDrawer = () => {
+      store.commit("showDrawer");
     };
 
     //Created
@@ -86,6 +103,9 @@ export default {
       userCountry,
       getWeatherInfo,
       getUserCountry,
+      background,
+      drawer,
+      showDrawer,
     };
   },
 };

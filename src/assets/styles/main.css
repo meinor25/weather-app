@@ -1,1 +1,24 @@
 @import url("https://fonts.googleapis.com/css2?family=Raleway:wght@500;600;700&display=swap");
+
+/* main-section */
+.main-section {
+  position: relative;
+}
+
+.main-section > .background {
+  position: absolute;
+  width: 100%;
+  height: 80vh;
+  overflow: hidden;
+  background-size: 150%;
+  background-repeat: repeat-x;
+  background-position: 50% 0%;
+  opacity: 0.1;
+}
+@media (width: 768px) {
+  .main-section > .background {
+    background-size: 120%;
+  }
+}
+
+/* navigation-drawer */

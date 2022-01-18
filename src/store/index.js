@@ -10,6 +10,7 @@ export default createStore({
     tempMode: "°c",
     actualDate: "",
     userCountry: "",
+    drawer: false,
   },
   mutations: {
     getActualTime(state) {
@@ -17,7 +18,9 @@ export default createStore({
     },
     userCountry(state, payload) {
       state.userCountry = payload;
-      console.log(payload);
+    },
+    showDrawer(state) {
+      state.drawer = !state.drawer;
     },
   },
   actions: {
