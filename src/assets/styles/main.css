@@ -11,14 +11,37 @@
   height: 80vh;
   overflow: hidden;
   background-size: 150%;
+  background-position: 50% 0;
   background-repeat: repeat-x;
-  background-position: 50% 0%;
   opacity: 0.1;
+  animation: clouds 10s linear infinite;
 }
+.error-icon {
+  animation: error 2s infinite;
+}
+
 @media (width: 768px) {
   .main-section > .background {
     background-size: 120%;
   }
 }
-
-/* navigation-drawer */
+/* Animations */
+@keyframes error {
+  0% {
+    transform: translateY(5px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(5px);
+  }
+}
+@keyframes clouds {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 300% 0;
+  }
+}

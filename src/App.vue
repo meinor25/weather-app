@@ -17,7 +17,7 @@
           <icon icon="crosshairs"></icon>
         </button>
       </header>
-      <div class="main-section flex flex-col items-center">
+      <div class="main-section flex flex-col items-center" v-if="!error">
         <div
           class="background w-full"
           :style="
@@ -47,6 +47,15 @@
           </p>
         </div>
       </div>
+      <div
+        class="container flex flex-col items-center justify-center h-3/6"
+        v-else
+      >
+        <h1 class="text-white text-center mx-5 mb-5 text-2xl">
+          La locacion ingresada no existe
+        </h1>
+        <icon icon="frown" class="text-3xl text-white error-icon" />
+      </div>
       <!-- NAVIGATION DRAWER -->
       <Drawer :drawer="drawer" />
     </div>
@@ -56,6 +65,7 @@
 <script>
 import { computed } from "@vue/reactivity";
 import { useStore } from "vuex";
+import axios from "axios";
 import Drawer from "./components/Drawer.vue";
 export default {
   name: "App",
@@ -72,17 +82,18 @@ export default {
     const userCountry = computed(() => store.state.userCountry);
     const background = require("./assets/img/Cloud-background.png");
     const drawer = computed(() => store.state.drawer);
+    const error = computed(() => store.state.badRequest);
 
     //Methods
     const currentTime = () => {
       store.commit("getActualTime");
     };
     const getWeatherInfo = () => {
-      console.log("weather info");
-      console.log("test");
+      store.dispatch("getWeather", userCountry.value);
     };
     const getUserCountry = () => {
       store.dispatch("getUserCountry");
+      store.dispatch("getWeather", userCountry.value);
     };
     const showDrawer = () => {
       store.commit("showDrawer");
@@ -91,10 +102,11 @@ export default {
     //Created
     currentTime();
     if (navigator.geolocation) {
-      getWeatherInfo();
+      setTimeout(() => {
+        getWeatherInfo();
+      }, 500);
       getUserCountry();
     }
-
     return {
       actualWeather,
       actualTemperature,
@@ -106,6 +118,7 @@ export default {
       background,
       drawer,
       showDrawer,
+      error,
     };
   },
 };
