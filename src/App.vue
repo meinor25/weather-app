@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col lg:flex-row">
     <!-- MAIN WEATHER AND SEARCH -->
-    <div class="bg-dark-blue lg:w-1/4 relative h-screen">
+    <div class="bg-dark-blue md:w2/4 lg:w-1/4 relative h-screen">
       <header class="flex justify-between">
         <button
           class="py-2 px-3 mt-3 ml-3 bg-gray text-white font-medium shadow-md shadow-gray-100"
@@ -11,7 +11,7 @@
         </button>
         <button
           class="px-3 mt-3 mr-3 rounded-full bg-gray text-white font-medium shadow-md shadow-gray-100"
-          @click="getUserCountry"
+          @click="getWeatherInfo"
         >
           <!-- Location Icon -->
           <icon icon="crosshairs"></icon>
@@ -47,12 +47,14 @@
           </p>
         </div>
       </div>
+      <!-- ERROR MESSAGE -->
       <div
         class="container flex flex-col items-center justify-center h-3/6"
         v-else
       >
         <h1 class="text-white text-center mx-5 mb-5 text-2xl">
-          La locacion ingresada no existe
+          <span class="text-red-100">"{{ userCountry }}"</span> couldn´t be
+          found
         </h1>
         <icon icon="frown" class="text-3xl text-white error-icon" />
       </div>
@@ -65,7 +67,6 @@
 <script>
 import { computed } from "@vue/reactivity";
 import { useStore } from "vuex";
-import axios from "axios";
 import Drawer from "./components/Drawer.vue";
 export default {
   name: "App",
@@ -75,12 +76,12 @@ export default {
     const store = useStore();
 
     //Data
+    const background = require("./assets/img/Cloud-background.png");
     const actualWeather = computed(() => store.state.actualWeather);
     const tempMode = computed(() => store.state.tempMode);
     const actualTemperature = computed(() => store.state.actualTemperature);
     const actualDate = computed(() => store.state.actualDate);
     const userCountry = computed(() => store.state.userCountry);
-    const background = require("./assets/img/Cloud-background.png");
     const drawer = computed(() => store.state.drawer);
     const error = computed(() => store.state.badRequest);
 
@@ -89,24 +90,26 @@ export default {
       store.commit("getActualTime");
     };
     const getWeatherInfo = () => {
-      store.dispatch("getWeather", userCountry.value);
-    };
-    const getUserCountry = () => {
       store.dispatch("getUserCountry");
-      store.dispatch("getWeather", userCountry.value);
+      setTimeout(() => {
+        store.dispatch("getWeather", userCountry.value);
+      }, 300);
     };
+    // const getUserCountry = () => {
+    //   store.commit("changeCountry", userCountry.value);
+    //   store.dispatch("getWeather", userCountry.value);
+    // };
     const showDrawer = () => {
       store.commit("showDrawer");
     };
 
     //Created
     currentTime();
-    if (navigator.geolocation) {
-      setTimeout(() => {
-        getWeatherInfo();
-      }, 500);
-      getUserCountry();
-    }
+
+    setTimeout(() => {
+      getWeatherInfo();
+    }, 200);
+
     return {
       actualWeather,
       actualTemperature,
@@ -114,7 +117,6 @@ export default {
       actualDate,
       userCountry,
       getWeatherInfo,
-      getUserCountry,
       background,
       drawer,
       showDrawer,

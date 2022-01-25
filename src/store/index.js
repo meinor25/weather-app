@@ -8,6 +8,7 @@ const API_key = "251d84f0e76ae17f8f43b56c19bdd945";
 
 export default createStore({
   state: {
+    recentSearch: [],
     actualWeather: "",
     actualTemperature: "",
     tempMode: "°c",
@@ -35,14 +36,23 @@ export default createStore({
         state.actualTemperature = Math.round(payload.main.temp);
         state.actualWeather = payload.weather[0].main;
         state.badRequest = false;
-        console.log(payload);
+      } else if (payload === 400) {
+        window.location.reload();
       } else {
         state.badRequest = true;
       }
+      console.log(payload);
     },
     //Updates user actual country
     changeCountry(state, payload) {
       state.userCountry = payload;
+    },
+    //Add recent search
+    updateRecentSearch(state, payload) {
+      state.recentSearch.push(payload);
+    },
+    deleteSearchs(state) {
+      state.recentSearch = [];
     },
   },
   actions: {

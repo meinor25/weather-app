@@ -12,6 +12,8 @@ import { faCrosshairs } from "@fortawesome/free-solid-svg-icons";
 import { faMapMarkerAlt } from "@fortawesome/free-solid-svg-icons";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { faFrown } from "@fortawesome/free-solid-svg-icons";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 //Styles (tailwind)
 import "./assets/tailwind.css";
 import "./assets/styles/main.css";
@@ -24,6 +26,8 @@ library.add(faCrosshairs);
 library.add(faMapMarkerAlt);
 library.add(faSearch);
 library.add(faFrown);
+library.add(faChevronRight);
+library.add(faTrash);
 
 createApp(App)
   .use(store)

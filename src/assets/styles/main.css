@@ -20,6 +20,20 @@
   animation: error 2s infinite;
 }
 
+/* Drawer-styles */
+.recent-search::-webkit-scrollbar {
+  background-color: #1e213a;
+}
+.recent-search::-webkit-scrollbar-thumb {
+  background: rgba(128, 128, 128, 0.342);
+  border-radius: 10px;
+  margin-right: 20px;
+}
+.recent-search > button:hover {
+  border: 3px solid white;
+}
+
+/* Breakpoints */
 @media (width: 768px) {
   .main-section > .background {
     background-size: 120%;
