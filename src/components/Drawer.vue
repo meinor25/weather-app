@@ -11,14 +11,17 @@
         </button>
       </div>
       <!-- SEARCH -->
-      <form @submit.prevent="search()" class="pt-3 flex justify-around">
-        <div class="p-2 border flex border-gray items-center">
-          <icon icon="search" class="text-gray" />
+      <form
+        @submit.prevent="search()"
+        class="pt-3 flex justify-around md:justify-between md:mx-10"
+      >
+        <div class="p-2 border flex border-gray items-center md:w-9/12">
+          <icon icon="search" class="text-gray mr-2" />
           <input
             type="text"
             placeholder="search a city..."
             v-model="countrySearch"
-            class="bg-dark-blue focus:outline-none text-white"
+            class="bg-dark-blue text-white focus:outline-none w-full"
             maxlength="20"
           />
         </div>
@@ -28,12 +31,13 @@
       </form>
       <!-- RECENT SEARCHES -->
       <div
-        class="flex flex-col mt-5 h-96 items-start overflow-y-scroll recent-search"
+        class="flex flex-col mt-5 mx-2 h-96 items-start overflow-y-scroll recent-search md:mx-10"
       >
         <button
           v-for="(search, i) of recentSearch"
           :key="i"
-          class="flex justify-between items-center mx-10 mt-10 p-3 text-left w-4/6 transition-all duration-100 text-white text-1xl"
+          class="flex justify-between items-center mt-10 p-3 text-left w-10/12 transition-all duration-100 text-white text-1xl md:w-full md:mt-10"
+          @click="searchRecentCountry(search)"
         >
           {{ search }}
           <icon icon="chevron-right" />
@@ -84,8 +88,8 @@ export default {
           (item) => item === countrySearch.value
         );
         console.log(filtered.length);
-        store.dispatch("getWeather", countrySearch.value);
         store.commit("changeCountry", countrySearch.value);
+        store.dispatch("getWeather");
         store.commit("showDrawer");
         //Add the recent user search to recentSearch array
         if (filtered.length <= 0) {
@@ -99,6 +103,11 @@ export default {
       //reset search input
       countrySearch.value = "";
     };
+    const searchRecentCountry = (search) => {
+      store.commit("changeCountry", search);
+      store.dispatch("getWeather");
+      store.commit("showDrawer");
+    };
     const deleteSearchs = () => {
       store.commit("deleteSearchs");
     };
@@ -108,6 +117,7 @@ export default {
       countrySearch,
       search,
       recentSearch,
+      searchRecentCountry,
       deleteSearchs,
     };
   },

@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col lg:flex-row">
     <!-- MAIN WEATHER AND SEARCH -->
-    <div class="bg-dark-blue md:w2/4 lg:w-1/4 relative h-screen">
+    <div class="bg-dark-blue md:w2/4 lg:w-2/5 h-screen relative pb-12">
       <header class="flex justify-between">
         <button
           class="py-2 px-3 mt-3 ml-3 bg-gray text-white font-medium shadow-md shadow-gray-100"
@@ -11,7 +11,7 @@
         </button>
         <button
           class="px-3 mt-3 mr-3 rounded-full bg-gray text-white font-medium shadow-md shadow-gray-100"
-          @click="getWeatherInfo"
+          @click="changeCountry()"
         >
           <!-- Location Icon -->
           <icon icon="crosshairs"></icon>
@@ -61,6 +61,25 @@
       <!-- NAVIGATION DRAWER -->
       <Drawer :drawer="drawer" />
     </div>
+    <!-- WEATHER HIGHLIGHTS AND MORE -->
+    <div class="w-full bg-deep-blue">
+      <!-- WEEK WEATHER INFO -->
+      <div
+        class="w-10/12 mx-auto px-8 py-5 grid grid-cols-2 gap-4 text-white text-center md:grid-cols-4"
+      >
+        <card v-for="index in 6" :key="index">
+          <h3>Tomorrow</h3>
+          <div class="flex justify-center">
+            <img
+              :src="require(`./assets/img/${actualWeather}.png`)"
+              alt=""
+              class="w-4/6"
+            />
+          </div>
+          <p class="pt-3 text-1xl">13°</p>
+        </card>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -68,9 +87,12 @@
 import { computed } from "@vue/reactivity";
 import { useStore } from "vuex";
 import Drawer from "./components/Drawer.vue";
+import Card from "./components/Card.vue";
+import axios from "axios";
+
 export default {
   name: "App",
-  components: { Drawer },
+  components: { Drawer, Card },
   setup() {
     //Store
     const store = useStore();
@@ -86,41 +108,50 @@ export default {
     const error = computed(() => store.state.badRequest);
 
     //Methods
+    const getCountry = () => {
+      axios
+        .get("https://ipinfo.io?token=42fcd4186ae323")
+        .then(({ data }) => store.commit("changeCountry", data.city));
+    };
     const currentTime = () => {
       store.commit("getActualTime");
     };
     const getWeatherInfo = () => {
-      store.dispatch("getUserCountry");
-      setTimeout(() => {
-        store.dispatch("getWeather", userCountry.value);
-      }, 300);
+      store.dispatch("getWeather");
     };
-    // const getUserCountry = () => {
-    //   store.commit("changeCountry", userCountry.value);
-    //   store.dispatch("getWeather", userCountry.value);
-    // };
+
+    const changeCountry = async () => {
+      console.log(userCountry.value);
+      await getCountry();
+      await store.dispatch("getWeather");
+      console.log(userCountry.value);
+    };
+
     const showDrawer = () => {
       store.commit("showDrawer");
     };
 
     //Created
+    getCountry();
     currentTime();
-
     setTimeout(() => {
       getWeatherInfo();
-    }, 200);
+    }, 500);
 
     return {
+      //Variables
       actualWeather,
       actualTemperature,
       tempMode,
       actualDate,
       userCountry,
-      getWeatherInfo,
       background,
+      error,
+      //Methods
+      getWeatherInfo,
       drawer,
       showDrawer,
-      error,
+      changeCountry,
     };
   },
 };

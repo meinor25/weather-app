@@ -41,7 +41,6 @@ export default createStore({
       } else {
         state.badRequest = true;
       }
-      console.log(payload);
     },
     //Updates user actual country
     changeCountry(state, payload) {
@@ -56,15 +55,21 @@ export default createStore({
     },
   },
   actions: {
-    getUserCountry({ commit }) {
-      axios
-        .get("https://ipinfo.io?token=42fcd4186ae323")
-        .then(({ data }) => commit("userCountry", data.city));
-    },
-    getWeather({ commit }, country) {
+    // getUserCountry({ commit }) {
+
+    // },
+    getWeather({ commit, state }) {
       axios
         .get(
-          `https://api.openweathermap.org/data/2.5/weather?q=${country}&appid=${API_key}&units=metric`
+          `https://api.openweathermap.org/data/2.5/weather?q=${state.userCountry}&appid=${API_key}&units=metric`
+        )
+        .then(({ data }) => commit("getWeather", data))
+        .catch((err) => commit("getWeather", err.response.status));
+    },
+    getUserCountryWeather({ commit }, payload) {
+      axios
+        .get(
+          `https://api.openweathermap.org/data/2.5/weather?q=${payload}&appid=${API_key}&units=metric`
         )
         .then(({ data }) => commit("getWeather", data))
         .catch((err) => commit("getWeather", err.response.status));
