@@ -87,9 +87,8 @@ export default {
         let filtered = recentSearch.value.filter(
           (item) => item === countrySearch.value
         );
-        console.log(filtered.length);
         store.commit("changeCountry", countrySearch.value);
-        store.dispatch("getWeather");
+        store.dispatch("getWeather", countrySearch.value);
         store.commit("showDrawer");
         //Add the recent user search to recentSearch array
         if (filtered.length <= 0) {
@@ -105,7 +104,7 @@ export default {
     };
     const searchRecentCountry = (search) => {
       store.commit("changeCountry", search);
-      store.dispatch("getWeather");
+      store.dispatch("getWeather", search);
       store.commit("showDrawer");
     };
     const deleteSearchs = () => {

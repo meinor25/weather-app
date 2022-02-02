@@ -14,6 +14,7 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { faFrown } from "@fortawesome/free-solid-svg-icons";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faLocationArrow } from "@fortawesome/free-solid-svg-icons";
 //Styles (tailwind)
 import "./assets/tailwind.css";
 import "./assets/styles/main.css";
@@ -28,6 +29,7 @@ library.add(faSearch);
 library.add(faFrown);
 library.add(faChevronRight);
 library.add(faTrash);
+library.add(faLocationArrow);
 
 createApp(App)
   .use(store)

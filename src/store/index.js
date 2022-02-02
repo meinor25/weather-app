@@ -4,11 +4,12 @@ import moment from "moment";
 import axios from "axios";
 
 //Variables
-const API_key = "251d84f0e76ae17f8f43b56c19bdd945";
+const API_key = "613c01e4db007d5007e0c76e4ad720b4";
 
 export default createStore({
   state: {
     recentSearch: [],
+    weatherInfo: {},
     actualWeather: "",
     actualTemperature: "",
     tempMode: "°c",
@@ -42,6 +43,10 @@ export default createStore({
         state.badRequest = true;
       }
     },
+    //Add items to weather info array
+    addWeatherInfo(state, payload) {
+      state.weatherInfo = payload;
+    },
     //Updates user actual country
     changeCountry(state, payload) {
       state.userCountry = payload;
@@ -55,23 +60,24 @@ export default createStore({
     },
   },
   actions: {
-    // getUserCountry({ commit }) {
-
-    // },
-    getWeather({ commit, state }) {
-      axios
-        .get(
-          `https://api.openweathermap.org/data/2.5/weather?q=${state.userCountry}&appid=${API_key}&units=metric`
-        )
-        .then(({ data }) => commit("getWeather", data))
-        .catch((err) => commit("getWeather", err.response.status));
-    },
-    getUserCountryWeather({ commit }, payload) {
+    getWeather({ commit }, payload) {
       axios
         .get(
           `https://api.openweathermap.org/data/2.5/weather?q=${payload}&appid=${API_key}&units=metric`
         )
-        .then(({ data }) => commit("getWeather", data))
+        .then(({ data }) => {
+          commit("getWeather", data);
+          commit("addWeatherInfo", {
+            wind: {
+              speed: `${data.wind.speed} mph`,
+              deg: data.wind.deg,
+            },
+            humidity: `${data.main.humidity} %`,
+            pressure: `${data.main.pressure} mb`,
+            visibility: `${data.visibility} miles`,
+          });
+          console.log(data);
+        })
         .catch((err) => commit("getWeather", err.response.status));
     },
   },

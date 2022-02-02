@@ -63,20 +63,27 @@
     </div>
     <!-- WEATHER HIGHLIGHTS AND MORE -->
     <div class="w-full bg-deep-blue">
-      <!-- WEEK WEATHER INFO -->
+      <!-- TODAY HIGHLIGHTS -->
+      <h2 class="pt-5 pl-5 text-white text-2xl font-bold">
+        Today's Highlights
+      </h2>
       <div
-        class="w-10/12 mx-auto px-8 py-5 grid grid-cols-2 gap-4 text-white text-center md:grid-cols-4"
+        class="w-10/12 mx-auto py-5 grid grid-cols-1 gap-4 text-white text-center md:grid-cols-2"
       >
-        <card v-for="index in 6" :key="index">
-          <h3>Tomorrow</h3>
-          <div class="flex justify-center">
-            <img
-              :src="require(`./assets/img/${actualWeather}.png`)"
-              alt=""
-              class="w-4/6"
-            />
+        <card v-for="(data, index) in weatherInfo" :key="index">
+          <h3 class="text-center">{{ index }}</h3>
+          <!-- WIND DATA -->
+          <div v-if="index === 'wind'">
+            <p class="text-4xl text-white font-bold">{{ data.speed }}</p>
+            <div class="flex justify-center">
+              <icon
+                icon="location-arrow"
+                class="mt-2 text-white"
+                :style="{ transform: `rotate(-${data.deg - 50}deg)` }"
+              />
+              <span class="pl-2">{{ data.deg }}°</span>
+            </div>
           </div>
-          <p class="pt-3 text-1xl">13°</p>
         </card>
       </div>
     </div>
@@ -104,39 +111,27 @@ export default {
     const actualTemperature = computed(() => store.state.actualTemperature);
     const actualDate = computed(() => store.state.actualDate);
     const userCountry = computed(() => store.state.userCountry);
+    const weatherInfo = computed(() => store.state.weatherInfo);
     const drawer = computed(() => store.state.drawer);
     const error = computed(() => store.state.badRequest);
 
     //Methods
-    const getCountry = () => {
-      axios
-        .get("https://ipinfo.io?token=42fcd4186ae323")
-        .then(({ data }) => store.commit("changeCountry", data.city));
-    };
-    const currentTime = () => {
-      store.commit("getActualTime");
-    };
-    const getWeatherInfo = () => {
-      store.dispatch("getWeather");
-    };
-
-    const changeCountry = async () => {
-      console.log(userCountry.value);
-      await getCountry();
-      await store.dispatch("getWeather");
-      console.log(userCountry.value);
+    const changeCountry = () => {
+      axios.get("https://ipinfo.io?token=42fcd4186ae323").then(({ data }) => {
+        store.dispatch("getWeather", data.city);
+        store.commit("changeCountry", data.city);
+      });
     };
 
     const showDrawer = () => {
       store.commit("showDrawer");
     };
 
+    /* LIFECYCLES */
     //Created
-    getCountry();
-    currentTime();
-    setTimeout(() => {
-      getWeatherInfo();
-    }, 500);
+    changeCountry();
+    store.commit("getActualTime");
+    console.log(weatherInfo.value);
 
     return {
       //Variables
@@ -144,11 +139,11 @@ export default {
       actualTemperature,
       tempMode,
       actualDate,
+      weatherInfo,
       userCountry,
       background,
       error,
       //Methods
-      getWeatherInfo,
       drawer,
       showDrawer,
       changeCountry,
