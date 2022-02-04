@@ -111,17 +111,8 @@
               <h3>{{ index }}</h3>
               <p class="text-4xl text-white font-bold">{{ data }}</p>
             </div>
-<<<<<<< HEAD
-          </div>
-          <div v-else>
-            <h3>{{ index }}</h3>
-            <p class="text-4xl text-white font-bold">{{ data }}</p>
-          </div>
-        </card>
-=======
           </card>
         </div>
->>>>>>> main
       </div>
     </div>
   </div>
