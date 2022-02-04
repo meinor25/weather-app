@@ -72,7 +72,7 @@ export default createStore({
               speed: `${data.wind.speed} mph`,
               deg: data.wind.deg,
             },
-            humidity: `${data.main.humidity} %`,
+            humidity: `${data.main.humidity}%`,
             pressure: `${data.main.pressure} mb`,
             visibility: `${data.visibility} miles`,
           });

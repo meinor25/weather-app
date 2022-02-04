@@ -62,18 +62,18 @@
       <Drawer :drawer="drawer" />
     </div>
     <!-- WEATHER HIGHLIGHTS AND MORE -->
-    <div class="w-full bg-deep-blue">
+    <div class="w-full pt-10 bg-deep-blue">
       <!-- TODAY HIGHLIGHTS -->
-      <h2 class="pt-5 pl-5 text-white text-2xl font-bold">
+      <h2 class="pt-5 pl-5 text-white text-center text-2xl font-bold">
         Today's Highlights
       </h2>
       <div
         class="w-10/12 mx-auto py-5 grid grid-cols-1 gap-4 text-white text-center md:grid-cols-2"
       >
         <card v-for="(data, index) in weatherInfo" :key="index">
-          <h3 class="text-center">{{ index }}</h3>
           <!-- WIND DATA -->
           <div v-if="index === 'wind'">
+            <h3 class="text-center">{{ index }} status</h3>
             <p class="text-4xl text-white font-bold">{{ data.speed }}</p>
             <div class="flex justify-center">
               <icon
@@ -83,6 +83,25 @@
               />
               <span class="pl-2">{{ data.deg }}°</span>
             </div>
+          </div>
+          <!-- HUMIDITY DATA -->
+          <div v-else-if="index == 'humidity'">
+            <h3 class="text-center">{{ index }}</h3>
+            <p class="text-4xl text-white font-bold">{{ data }}</p>
+            <div class="flex w-8/12 mx-auto justify-between text-gray">
+              <h4>0</h4>
+              <h4>50</h4>
+              <h4>100</h4>
+            </div>
+            <!-- PROGRESS BAR -->
+            <div class="bar w-8/12 mx-auto h-2 bg-white rounded relative">
+              <!-- INSIDE BAR -->
+              <div
+                class="h-full absolute bg-yellow rounded"
+                :style="{ width: `${data}` }"
+              ></div>
+            </div>
+            
           </div>
         </card>
       </div>

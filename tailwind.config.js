@@ -7,6 +7,7 @@ module.exports = {
       gray: "#6E707A",
       white: "#E7E7EB",
       "light-gray": "#A09FB1",
+      yellow: "#FFEC65",
     },
     fontFamily: {
       sans: ["Raleway", "sans-serif"],
